@@ -1,33 +1,41 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
+from pathlib import Path
+import json
 
 app = Flask(__name__)
 
-traits = [
-    {"name": "something", "rating" : 5, "length" : 5, "painCounter": 5342},
-    {"name": "something", "rating" : 5, "length" : 5, "painCounter": 5342},
-    {"name": "something", "rating" : 5, "length" : 5, "painCounter": 5342},
-    {"name": "something", "rating" : 5, "length" : 5, "painCounter": 5342},
-    {"name": "something", "rating" : 5, "length" : 5, "painCounter": 5342}
-]
+BASE = Path(__file__).parent
 
-@app.route('/traits', methods=["GET"])
-def hello_world():
-    return traits, {"Access-Control-Allow-Origin":"*"} 
+FILE = BASE / "messages.json"
 
-@app.route('/traits', methods=["POST"])
-def addTrait():
-    d = {
-        'name' : request.form['name'],
-        'rating' : request.form['rating'],
-        'length' : request.form['length'],
-        'painCounter' : request.form['painCounter']
-    }
-    traits.append(d)
+def load_messages():
+    if FILE.exists():
+        with open(FILE, "r") as file:
+            return json.load(file)
+    return []
+
+def save_messages(messages):
+    with open(FILE, "w") as file:
+        json.dump(messages, file, indent=2)
+
+@app.route('/messages', methods=["GET"])
+def get_messages():
+    messages = load_messages()
+    return jsonify(messages), 200, {"Access-Control-Allow-Origin":"*"} 
+
+@app.route('/messages', methods=["POST"])
+def post_message():
+    data = request.form
+    if not data or "name" not in data or "message" not in data:
+        return "Invalid Request", 400, {"Access-Control-Allow-Origin":"*"}
+    messages = load_messages()
+    messages.append({"name" : data['name'], "message" : data['message']})
+    save_messages(messages)
     return "Created", 201, {"Access-Control-Allow-Origin":"*"} 
 
 
 def main():
-    app.run()
+    app.run(debug=True)
 
 if __name__ == "__main__":
     main()
