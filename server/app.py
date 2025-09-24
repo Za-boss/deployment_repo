@@ -26,10 +26,10 @@ def get_messages():
 @app.route('/messages', methods=["POST"])
 def post_message():
     data = request.form
-    if not data or "name" not in data or "message" not in data:
+    if not data or "name" not in data or "message" not in data or "image" not in data:
         return "Invalid Request", 400, {"Access-Control-Allow-Origin":"*"}
     messages = load_messages()
-    messages.append({"name" : data['name'], "message" : data['message']})
+    messages.append({"name" : data['name'], "message" : data['message'], "image" : data['image']})
     save_messages(messages)
     return "Created", 201, {"Access-Control-Allow-Origin":"*"} 
 

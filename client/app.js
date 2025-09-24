@@ -1,26 +1,25 @@
-console.log("hi")
-const main = () => {
-    let data = getData()
-}
 const loadMessages = () => {
     const addElement = (element) => {
         let parentDiv = document.querySelector("#messageBoard")
         let div = document.createElement("div")
         let name = document.createElement("h3")
         let message = document.createElement("p")
+        let image = document.createElement("img")
 
         name.textContent = element.name
         message.textContent = element.message
+        image.src = element.image
+        image.alt = ""
         parentDiv.append(div)
         div.append(name)
         div.append(message)
+        div.append(image)
     }
 
     fetch("http://localhost:5000/messages")
     .then(response => {
         response.json()
         .then(data => {
-            console.log(data)
             document.querySelector("#messageBoard").innerHTML = ""
             data.forEach(element => {
                 addElement(element)
@@ -34,9 +33,10 @@ const sendData = () => {
 
     let message = document.querySelector("#message").value
 
-
+    let image = document.querySelector("#image").value
     let data = "name="+encodeURIComponent(name)
     data += "&message="+encodeURIComponent(message)
+    data += "&image="+encodeURIComponent(image)
 
     fetch("http://localhost:5000/messages", {
         method: "POST",
@@ -54,8 +54,8 @@ const sendData = () => {
         }
     })
 }
+document.querySelector("#form-button").addEventListener("click", sendData)
 
-document.querySelector("#submit").addEventListener("click", sendData)
 document.querySelector("form").addEventListener("submit", event => {
     event.preventDefault()
 })
