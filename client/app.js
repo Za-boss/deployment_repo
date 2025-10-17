@@ -4,7 +4,65 @@ const load_messages = () => {
         let message_container_div = document.createElement("div")
         message_container_div.classList.add('message-container')
 
-        let form_div = document.createElement("div")
+        // edit form creation
+
+        let form = document.createElement("form")
+        form.classList.add("message-form")
+        form.style.display = "none"
+
+        let title_label = document.createElement("label")
+        title_label.textContent = "Title"
+        title_label.htmlFor = "title"
+
+        let title_input = document.createElement("input")
+        title_input.type = "text"
+        title_input.id = "title"
+        title_input.name = "title"
+        title_input.value = element.title
+        title_input.placeholder = "Enter in the new title"
+
+        let message_label = document.createElement("label")
+        message_label.textContent = "Message"
+        message_label.htmlFor = "message"
+
+        let message_input = document.createElement("input")
+        message_input.type = "text"
+        message_input.id = "message"
+        message_input.name = "message"
+        message_input.value = element.message
+        message_input.placeholder = "Enter in the new message"
+
+        let image_label = document.createElement("label")
+        image_label.textContent = "Image Link"
+        image_label.htmlFor = "image"
+
+        let image_input = document.createElement("input")
+        image_input.type = "text"
+        image_input.id = "image"
+        image_input.name = "image"
+        image_input.value = element.image
+        image_input.placeholder = "Enter in the new image link"
+
+
+        let submit_button = document.createElement("button")
+        submit_button.id = "form-button"
+        submit_button.type = "button"
+        submit_button.textContent = "Submit"
+
+        let cancel_button = document.createElement("button")
+        cancel_button.id = "form-button"
+        cancel_button.type = "button"
+        cancel_button.textContent = "Cancel"
+
+        form.append(title_label)
+        form.append(title_input)
+        form.append(message_label)
+        form.append(message_input)
+        form.append(image_label)
+        form.append(image_input)
+        form.append(submit_button)
+        form.append(cancel_button)
+
 
         let content_div = document.createElement("div")
         content_div.classList.add('message-display')
@@ -19,10 +77,16 @@ const load_messages = () => {
         delete_button.addEventListener("click", () => delete_data(id))
 
         edit_button.addEventListener("click", () => {
-            edit_message(id, form_div)
+            edit_message(id, content_div, form, submit_button)
+        })
+        cancel_button.addEventListener("click", () => {
+            content_div.style.display = "block"
+            form.style.display = "none"
+            title_input.value = element.title
+            message_input.value = element.message
+            image_input.value = element.image
         })
 
-        console.log(id)
 
         title.textContent = element.title
         message.textContent = element.message
@@ -32,6 +96,7 @@ const load_messages = () => {
         image.alt = ""
         parentDiv.append(message_container_div)
         message_container_div.append(content_div)
+        message_container_div.append(form)
         content_div.append(title)
         content_div.append(message)
         content_div.append(image)
@@ -50,12 +115,17 @@ const load_messages = () => {
     })
 }
 
-const edit_message = (id) => {
-
-    const submit_edits = (id, data) => {
-        let urldata = "title="+encodeURIComponent(data.title)
-        urldata += "&message="+encodeURIComponent(data.message)
-        urldata += "&image="+encodeURIComponent(data.image)
+const edit_message = (element_id, content_div, form, submit_button) => {
+    content_div.style.display = "none"
+    form.style.display = "block"
+    submit_button.addEventListener("click", () => {
+        submit_edits(element_id)
+    })
+    const submit_edits = (id) => {
+        const data = new FormData(form)
+        let urldata = "title="+encodeURIComponent(data.get("title"))
+        urldata += "&message="+encodeURIComponent(data.get("message"))
+        urldata += "&image="+encodeURIComponent(data.get("image"))
 
         fetch(`http://localhost:5000/messages/${id}`, {
             method: "PUT",
@@ -66,14 +136,19 @@ const edit_message = (id) => {
         })
         .then(response => {
             if (response.status == 204) {
-            console.log("deleted")
+            console.log("updated")
             load_messages()
+            content_div.style.display = "block"
+            form.style.display = "none"
             } else if (response.status == 404) {
                 console.warn("message not found")
             } else {
-                console.error("Delete failed", response.status)
+                console.error("Update failed", response.status)
             }
         })
+    }
+    const cancel_edits = () => {
+
     }
 }
 
@@ -94,11 +169,11 @@ const delete_data = (id) => {
 }
 
 const send_data = () => {
-    let title = document.querySelector("#title").value
+    let title = document.querySelector(".new-message-form #title").value
 
-    let message = document.querySelector("#message").value
+    let message = document.querySelector(".new-message-form #message").value
 
-    let image = document.querySelector("#image").value
+    let image = document.querySelector(".new-message-form #image").value
     let data = "title="+encodeURIComponent(title)
     data += "&message="+encodeURIComponent(message)
     data += "&image="+encodeURIComponent(image)
