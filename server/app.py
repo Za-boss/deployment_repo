@@ -15,23 +15,35 @@ def do_preflight(message_id):
 @app.route('/messages', methods=["GET"])
 def get_messages():
     with DBManager("serverdb.db") as db:
-        messages = db.get_all_entries()
-        return jsonify(messages), 200, {"Access-Control-Allow-Origin":"*"} 
+        try:
+            messages = db.get_all_entries()
+            return jsonify(messages), 200, {"Access-Control-Allow-Origin":"*"} 
+        except Exception as e:
+            print("data retrieval failed", e)
+            return "Internal Server Error", 500, {"Access-Control-Allow-Origin":"*"}
 
 @app.route('/messages/<int:message_id>', methods=["GET"])
 def get_message(message_id):
     with DBManager("serverdb.db") as db:
-        message = db.retrieve_entry(message_id)
-        if message is None:
-            return "error: message not found", 404, {"Access-Control-Allow-Origin":"*"}  
+        try:
+            message = db.retrieve_entry(message_id)
+            if message is None:
+                return "error: message not found", 404, {"Access-Control-Allow-Origin":"*"}  
+        except Exception as e:
+            print("data retrieval failed", e)
+            return "Internal Server Error", 500, {"Access-Control-Allow-Origin":"*"}
         return jsonify(message), 200, {"Access-Control-Allow-Origin":"*"} 
     
 @app.route('/messages/<int:message_id>', methods=["DELETE"])
 def delete_message(message_id):
     with DBManager("serverdb.db") as db:
-        if db.retrieve_entry(message_id) is None:
-            return "error: message not found", 404, {"Access-Control-Allow-Origin":"*"}  
-        db.delete_entry(message_id)
+        try:
+            if db.retrieve_entry(message_id) is None:
+                return "error: message not found", 404, {"Access-Control-Allow-Origin":"*"}  
+            db.delete_entry(message_id)
+        except Exception as e:
+            print("data deleting failed", e)
+            return "Internal Server Error", 500, {"Access-Control-Allow-Origin":"*"}
         return 'deleted', 204, {"Access-Control-Allow-Origin":"*"} 
 
 @app.route('/messages/<int:message_id>', methods=["PUT"])
@@ -45,9 +57,13 @@ def update_message(message_id):
         ):
         return "error: invalid request", 400, {"Access-Control-Allow-Origin":"*"}  
     with DBManager("serverdb.db") as db:
-        if db.retrieve_entry(message_id) is None:
-            return "error: message not found", 404, {"Access-Control-Allow-Origin":"*"}  
-        db.update_entry(message_id, data)
+        try :
+            if db.retrieve_entry(message_id) is None:
+                return "error: message not found", 404, {"Access-Control-Allow-Origin":"*"}  
+            db.update_entry(message_id, data)
+        except Exception as e:
+            print("data updating failed", e)
+            return "Internal Server Error", 500, {"Access-Control-Allow-Origin":"*"}
         return 'updated', 204, {"Access-Control-Allow-Origin":"*"} 
 
 
@@ -57,7 +73,14 @@ def post_message():
     if not data or "title" not in data or "message" not in data or "image" not in data:
         return "Invalid Request", 400, {"Access-Control-Allow-Origin":"*"}
     with DBManager("serverdb.db") as db:
-        db.new_entry(data)
+        try:
+            db.new_entry(data)
+        except Exception as e:
+            print("data saving failed", e)
+            return "Internal Server Error", 500, {"Access-Control-Allow-Origin":"*"}
+
+        
+        
     return "Created", 201, {"Access-Control-Allow-Origin":"*"} 
 
 @app.errorhandler(404)
