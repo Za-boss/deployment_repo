@@ -32,14 +32,14 @@ def delete_message(message_id):
         if db.retrieve_entry(message_id) is None:
             return "error: message not found", 404, {"Access-Control-Allow-Origin":"*"}  
         db.delete_entry(message_id)
-        return '', 204, {"Access-Control-Allow-Origin":"*"} 
+        return 'deleted', 204, {"Access-Control-Allow-Origin":"*"} 
 
 @app.route('/messages/<int:message_id>', methods=["PUT"])
 def update_message(message_id):
     data = request.form
     if (
         not data
-        or "name" not in data
+        or "title" not in data
         or "message" not in data
         or "image" not in data
         ):
@@ -48,13 +48,13 @@ def update_message(message_id):
         if db.retrieve_entry(message_id) is None:
             return "error: message not found", 404, {"Access-Control-Allow-Origin":"*"}  
         db.update_entry(message_id, data)
-        return '', 204, {"Access-Control-Allow-Origin":"*"} 
+        return 'updated', 204, {"Access-Control-Allow-Origin":"*"} 
 
 
 @app.route('/messages', methods=["POST"])
 def post_message():
     data = request.form
-    if not data or "name" not in data or "message" not in data or "image" not in data:
+    if not data or "title" not in data or "message" not in data or "image" not in data:
         return "Invalid Request", 400, {"Access-Control-Allow-Origin":"*"}
     with DBManager("serverdb.db") as db:
         db.new_entry(data)

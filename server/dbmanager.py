@@ -28,7 +28,7 @@ class DBManager:
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS messages (
             id INTEGER PRIMARY KEY,
-            name TEXT,
+            title TEXT,
             message TEXT,
             image TEXT
         )
@@ -56,7 +56,7 @@ class DBManager:
         self.connection.commit()
 
     def new_entry(self, entry):
-        self.cursor.execute("INSERT INTO messages (name, message, image) VALUES (?, ?, ?)", (entry["name"], entry["message"], entry["image"]))
+        self.cursor.execute("INSERT INTO messages (title, message, image) VALUES (?, ?, ?)", (entry["title"], entry["message"], entry["image"]))
         self.connection.commit()
 
     def delete_entry(self, entry_id):
@@ -64,7 +64,7 @@ class DBManager:
         self.connection.commit()
 
     def update_entry(self, entry_id, entry_data):
-        self.cursor.execute("UPDATE messages SET name = ?, message = ?, image = ? WHERE id = ?", (entry_data['name'], entry_data['message'], entry_data['image'], entry_id))
+        self.cursor.execute("UPDATE messages SET title = ?, message = ?, image = ? WHERE id = ?", (entry_data['title'], entry_data['message'], entry_data['image'], entry_id))
         self.connection.commit()
 
     def __exit__(self, exc_type, exc_value, trace_back):
@@ -78,8 +78,8 @@ class DBManager:
 with DBManager("serverdb.db") as db:
     print(db.get_all_entries())
     db.delete_all_entries()
-    db.new_entry({"name": "bob", "message": "hi", "image" : "img34"})
-    db.update_entry(1, {"name": "charles", "message" : "bob is dead", "image" : "img35"})
+    db.new_entry({"title": "bob", "message": "hi", "image" : "img34"})
+    db.update_entry(1, {"title": "charles", "message" : "bob is dead", "image" : "img35"})
     print(db.retrieve_entry(1))
 
         
