@@ -33,7 +33,7 @@ h1, h2 {
 /* Message board */
 .message-board {
   margin-bottom: 30px;
-  max-height: 300px;
+  max-height: 500px;
   overflow-y: auto;
   border: 1px solid #dcdde1;
   border-radius: 6px;
@@ -62,6 +62,7 @@ h1, h2 {
 }
 
 /* Form styling */
+
 .message-form {
   display: flex;
   flex-direction: column;
@@ -93,4 +94,115 @@ h1, h2 {
 
 .message-form button:hover {
   background: #273c75;
+}
+
+/*message edit form*/
+
+.message-edit-form {
+  background-color: #f1f2f6;
+  border: 1px solid #dcdde1;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 10px;
+  display: none; /* hidden by default */
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Make the edit form stand out from the static message */
+.message-edit-form label {
+  font-size: 0.9em;
+  color: #2f3640;
+}
+
+.message-edit-form input {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.95em;
+  transition: border-color 0.2s ease;
+}
+
+.message-edit-form input:focus {
+  border-color: #40739e;
+  outline: none;
+}
+
+.message-edit-form button {
+  padding: 10px;
+  font-size: 0.9em;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Primary (submit) button */
+.message-edit-form .submit-button {
+  background-color: #40739e;
+  color: white;
+  border: none;
+}
+
+.message-edit-form .submit-button:hover {
+  background-color: #273c75;
+}
+
+/* Secondary (cancel) button */
+.message-edit-form .cancel-button {
+  background-color: #e84118;
+  color: white;
+  border: none;
+}
+
+.message-edit-form .cancel-button:hover {
+  background-color: #c23616;
+}
+
+/*delete and edit buttons*/
+
+.message-display {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Container for the action buttons */
+.message-display .delete-button,
+.message-display .edit-button {
+  padding: 8px 14px;
+  font-size: 0.9em;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  width: fit-content;
+}
+
+/* Edit Button Styling — similar tone to your form submit buttons */
+.message-display .edit-button {
+  background-color: #40739e;
+}
+
+.message-display .edit-button:hover {
+  background-color: #273c75;
+}
+
+/* Delete Button Styling — complementary red tone for destructive action */
+.message-display .delete-button {
+  background-color: #e84118;
+}
+
+.message-display .delete-button:hover {
+  background-color: #c23616;
+  transform: translateY(-1px);
+}
+
+/* Optional: layout both buttons side by side */
+.message-display .edit-button,
+.message-display .delete-button {
+  display: inline-block;
+  margin-right: 8px;
 }

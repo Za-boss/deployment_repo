@@ -8,6 +8,7 @@ const load_messages = () => {
 
         let form = document.createElement("form")
         form.classList.add("message-form")
+        form.classList.add("message-edit-form")
         form.style.display = "none"
 
         let title_label = document.createElement("label")
@@ -45,11 +46,13 @@ const load_messages = () => {
 
 
         let submit_button = document.createElement("button")
+        submit_button.classList.add("submit-button")
         submit_button.id = "form-button"
         submit_button.type = "button"
         submit_button.textContent = "Submit"
 
         let cancel_button = document.createElement("button")
+        cancel_button.classList.add("cancel-button")
         cancel_button.id = "form-button"
         cancel_button.type = "button"
         cancel_button.textContent = "Cancel"
@@ -70,7 +73,11 @@ const load_messages = () => {
         let message = document.createElement("p")
         let image = document.createElement("img")
         let delete_button = document.createElement("button")
+        delete_button.classList.add("delete-button")
+        delete_button.textContent = "Delete"
         let edit_button = document.createElement("button")
+        edit_button.classList.add("edit-button")
+        edit_button.textContent = "Edit"
 
         let id = element.id
 
@@ -90,8 +97,6 @@ const load_messages = () => {
 
         title.textContent = element.title
         message.textContent = element.message
-        delete_button.textContent = "Delete"
-        edit_button.textContent = "Edit"
         image.src = element.image
         image.alt = ""
         parentDiv.append(message_container_div)
@@ -117,7 +122,7 @@ const load_messages = () => {
 
 const edit_message = (element_id, content_div, form, submit_button) => {
     content_div.style.display = "none"
-    form.style.display = "block"
+    form.style.display = "flex"
     submit_button.addEventListener("click", () => {
         submit_edits(element_id)
     })
@@ -146,9 +151,6 @@ const edit_message = (element_id, content_div, form, submit_button) => {
                 console.error("Update failed", response.status)
             }
         })
-    }
-    const cancel_edits = () => {
-
     }
 }
 
