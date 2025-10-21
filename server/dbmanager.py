@@ -74,12 +74,12 @@ class DBManager:
 
 #Example Usage below
 
-
+"""
 with DBManager("serverdb.db") as db:
     print(db.get_all_entries())
     db.delete_all_entries()
     db.new_entry({"title": "bob", "message": "hi", "image" : "img34"})
     db.update_entry(1, {"title": "charles", "message" : "bob is dead", "image" : "img35"})
     print(db.retrieve_entry(1))
-
+"""
         

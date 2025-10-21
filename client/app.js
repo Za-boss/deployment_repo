@@ -1,3 +1,4 @@
+const MESSAGE_ENDPOINT = "http://localhost:5000/messages"
 const load_messages = () => {
     const addElement = (element) => {
         let parentDiv = document.querySelector("#messageBoard")
@@ -108,7 +109,7 @@ const load_messages = () => {
         content_div.append(delete_button)
         content_div.append(edit_button)
     }
-    fetch("http://localhost:5000/messages")
+    fetch(MESSAGE_ENDPOINT)
     .then(response => {
         response.json()
         .then(data => {
@@ -132,7 +133,7 @@ const edit_message = (element_id, content_div, form, submit_button) => {
         urldata += "&message="+encodeURIComponent(data.get("message"))
         urldata += "&image="+encodeURIComponent(data.get("image"))
 
-        fetch(`http://localhost:5000/messages/${id}`, {
+        fetch(`${MESSAGE_ENDPOINT}/${id}`, {
             method: "PUT",
             body: urldata,
             headers: {
@@ -155,7 +156,7 @@ const edit_message = (element_id, content_div, form, submit_button) => {
 }
 
 const delete_data = (id) => {
-    fetch(`http://localhost:5000/messages/${id}`, {
+    fetch(`${MESSAGE_ENDPOINT}/${id}`, {
         method: "DELETE"
     })
     .then(response => {
@@ -171,16 +172,16 @@ const delete_data = (id) => {
 }
 
 const send_data = () => {
-    let title = document.querySelector(".new-message-form #title").value
+    let title_input = document.querySelector(".new-message-form #title")
 
-    let message = document.querySelector(".new-message-form #message").value
+    let message_input = document.querySelector(".new-message-form #message")
 
-    let image = document.querySelector(".new-message-form #image").value
-    let data = "title="+encodeURIComponent(title)
-    data += "&message="+encodeURIComponent(message)
-    data += "&image="+encodeURIComponent(image)
+    let image_input = document.querySelector(".new-message-form #image")
+    let data = "title="+encodeURIComponent(title_input.value)
+    data += "&message="+encodeURIComponent(message_input.value)
+    data += "&image="+encodeURIComponent(image_input.value)
 
-    fetch("http://localhost:5000/messages", {
+    fetch(MESSAGE_ENDPOINT, {
         method: "POST",
         body: data,
         headers: {
@@ -191,6 +192,10 @@ const send_data = () => {
         if (response.ok) {
             load_messages()
             console.log("post successful")
+
+            title_input.value = ""
+            message_input.value = ""
+            image_input.value = ""
         } else {
             console.log("post failure")
         }
