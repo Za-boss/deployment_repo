@@ -1,4 +1,4 @@
-const MESSAGE_ENDPOINT = "http://localhost:5000/messages"
+const SERVER_URL = "http://localhost:5000"
 const load_messages = () => {
     const addElement = (element) => {
         let parentDiv = document.querySelector("#messageBoard")
@@ -109,7 +109,7 @@ const load_messages = () => {
         content_div.append(delete_button)
         content_div.append(edit_button)
     }
-    fetch(MESSAGE_ENDPOINT)
+    fetch(`${SERVER_URL}/messages`)
     .then(response => {
         response.json()
         .then(data => {
@@ -133,7 +133,7 @@ const edit_message = (element_id, content_div, form, submit_button) => {
         urldata += "&message="+encodeURIComponent(data.get("message"))
         urldata += "&image="+encodeURIComponent(data.get("image"))
 
-        fetch(`${MESSAGE_ENDPOINT}/${id}`, {
+        fetch(`${SERVER_URL}/mesages/${id}`, {
             method: "PUT",
             body: urldata,
             headers: {
@@ -156,7 +156,7 @@ const edit_message = (element_id, content_div, form, submit_button) => {
 }
 
 const delete_data = (id) => {
-    fetch(`${MESSAGE_ENDPOINT}/${id}`, {
+    fetch(`${SERVER_URL}/messages/${id}`, {
         method: "DELETE"
     })
     .then(response => {
@@ -181,7 +181,7 @@ const send_data = () => {
     data += "&message="+encodeURIComponent(message_input.value)
     data += "&image="+encodeURIComponent(image_input.value)
 
-    fetch(MESSAGE_ENDPOINT, {
+    fetch(`${SERVER_URL}/messages`, {
         method: "POST",
         body: data,
         headers: {
