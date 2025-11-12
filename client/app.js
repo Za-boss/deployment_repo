@@ -1,4 +1,9 @@
-const SERVER_URL = "http://localhost:5000"
+// basically if you are running locally, use localhost:5000 
+// other wise when using kubernetes use the same host via ingress
+const SERVER_URL =
+  (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+    ? "http://localhost:5000"
+    : "";
 const load_messages = () => {
     const addElement = (element) => {
         let parentDiv = document.querySelector("#messageBoard")
@@ -132,8 +137,8 @@ const edit_message = (element_id, content_div, form, submit_button) => {
         let urldata = "title="+encodeURIComponent(data.get("title"))
         urldata += "&message="+encodeURIComponent(data.get("message"))
         urldata += "&image="+encodeURIComponent(data.get("image"))
-
-        fetch(`${SERVER_URL}/mesages/${id}`, {
+// there was a typo below /messages/ was spelled as /mesages/
+        fetch(`${SERVER_URL}/messages/${id}`, {
             method: "PUT",
             body: urldata,
             headers: {

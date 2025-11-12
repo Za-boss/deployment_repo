@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: msg-app
+  namespace: student1
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: msg-frontend
+                port:
+                  number: 80
+          - path: /messages
+            pathType: Prefix
+            backend:
+              service:
+                name: msg-backend
+                port:
+                  number: 5000
